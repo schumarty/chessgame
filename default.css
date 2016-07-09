@@ -1,3 +1,4 @@
+/* build the chessborad */
 table {
 	width: 400px;
 	height: 400px;
@@ -10,27 +11,36 @@ td {
 	text-align: center;
 	vertical-align: center;
 }
-tr.row_8 td:nth-child(even),
-tr.row_6 td:nth-child(even),
-tr.row_4 td:nth-child(even),
-tr.row_2 td:nth-child(even){
+tr.rank_8 td:nth-child(even),
+tr.rank_6 td:nth-child(even),
+tr.rank_4 td:nth-child(even),
+tr.rank_2 td:nth-child(even){
 	background-color: gray;
 }
-tr.row_8 td:nth-child(odd),
-tr.row_6 td:nth-child(odd),
-tr.row_4 td:nth-child(odd),
-tr.row_2 td:nth-child(odd){
+tr.rank_8 td:nth-child(odd),
+tr.rank_6 td:nth-child(odd),
+tr.rank_4 td:nth-child(odd),
+tr.rank_2 td:nth-child(odd){
 	background-color: lightgray;
 }
-tr.row_7 td:nth-child(even),
-tr.row_5 td:nth-child(even),
-tr.row_3 td:nth-child(even),
-tr.row_1 td:nth-child(even){
+tr.rank_7 td:nth-child(even),
+tr.rank_5 td:nth-child(even),
+tr.rank_3 td:nth-child(even),
+tr.rank_1 td:nth-child(even){
 	background-color: lightgray;
 }
-tr.row_7 td:nth-child(odd),
-tr.row_5 td:nth-child(odd),
-tr.row_3 td:nth-child(odd),
-tr.row_1 td:nth-child(odd){
+tr.rank_7 td:nth-child(odd),
+tr.rank_5 td:nth-child(odd),
+tr.rank_3 td:nth-child(odd),
+tr.rank_1 td:nth-child(odd){
 	background-color: gray;
+}
+
+/* now style the pieces */
+.black {
+	color: black;
+}
+
+.white {
+	color: white;
 }
