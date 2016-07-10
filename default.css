@@ -9,7 +9,7 @@ td {
 	width: 12%;
 	border: 1px solid black;
 	text-align: center;
-	vertical-align: center;
+	vertical-align: middle;
 }
 tr.rank_8 td:nth-child(even),
 tr.rank_6 td:nth-child(even),
@@ -36,11 +36,16 @@ tr.rank_1 td:nth-child(odd){
 	background-color: gray;
 }
 
+#chessboard td:hover{
+	background-color: lightgreen;
+}
 /* now style the pieces */
 .black {
+	font-weight: bold;
 	color: black;
 }
 
 .white {
+	font-weight: bold;
 	color: white;
 }
