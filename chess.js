@@ -37,8 +37,9 @@ $(document).ready(function () {
 			movePiece(piece.boardPosition, newPosition);
 			piece.html = "";
 		} else {
-			$(this).css("background-color", "orange");
 			piece.html = $(this).html();
+			// only hightlight spot if it contains a piece we can move
+			if (piece.html) {$(this).css("background-color", "orange");}
 			piece.boardPosition = cssToPos(this.className, this.parentElement.className);
 		}
 	});
