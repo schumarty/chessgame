@@ -25,23 +25,21 @@ var piece = {
 	html: "",
 	boardPosition: ""
 };
-$("td").click(function () {
-	// only the selected spot will be orange
-	$("td").each(function() {
-		this.removeAttribute("style");
-	});
-	$(this).css("background-color", "orange");
-
-	if (piece.html) {
-		var newPosition = cssToPos(this.className, this.parentElement.className);
-		// show that piece has been de-selected
-		if (newPosition === piece.boardPosition) {
+$(document).ready(function () {
+	$("td").click(function () {
+		// only the selected spot will be orange
+		$("td").each(function() {
 			this.removeAttribute("style");
+		});
+
+		if (piece.html) {
+			var newPosition = cssToPos(this.className, this.parentElement.className);
+			movePiece(piece.boardPosition, newPosition);
+			piece.html = "";
+		} else {
+			$(this).css("background-color", "orange");
+			piece.html = $(this).html();
+			piece.boardPosition = cssToPos(this.className, this.parentElement.className);
 		}
-		movePiece(piece.boardPosition, newPosition);
-		piece.html = "";
-	} else {
-		piece.html = $(this).html();
-		piece.boardPosition = cssToPos(this.className, this.parentElement.className);
-	}
+	});
 });
