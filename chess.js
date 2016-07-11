@@ -36,11 +36,11 @@ $(document).ready(function () {
 			var newPosition = cssToPos(this.className, this.parentElement.className);
 
 			var capturedPiece = this.childNodes[0];
-			if (capturedPiece) {
+			if (capturedPiece && newPosition !== piece.boardPosition) {
 				if (capturedPiece.className.match(/black/)) {
-					$("#black_info").append(capturedPiece);
+					$(capturedPiece).clone().appendTo($("#black_info"));
 				} else if (capturedPiece.className.match(/white/)) {
-					$("#white_info").append(capturedPiece);
+					$(capturedPiece).clone().appendTo($("#white_info"));
 				}
 			}
 
