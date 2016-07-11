@@ -37,7 +37,7 @@ tr.rank_1 td:nth-child(odd){
 }
 
 #chessboard td:hover{
-	background-color: lightgreen;
+	background-color: yellow;
 }
 /* now style the pieces */
 .black {
