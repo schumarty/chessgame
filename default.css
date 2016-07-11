@@ -65,10 +65,14 @@ tr.rank_1 td:nth-child(odd){
 	color: white;
 }
 #black_info {
-	display: inline-block;
+	width: 50%;
+	height: 120px;
+	float: right;
 	background-color: lightgray;
 }
 #white_info {
-	display: inline-block;
+	width: 50%;
+	height: 120px;
+	float: left;
 	background-color: gray;
 }
