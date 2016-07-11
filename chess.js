@@ -34,6 +34,16 @@ $(document).ready(function () {
 
 		if (piece.html) {
 			var newPosition = cssToPos(this.className, this.parentElement.className);
+
+			var capturedPiece = this.childNodes[0];
+			if (capturedPiece) {
+				if (capturedPiece.className.match(/black/)) {
+					$("#black_info").append(capturedPiece);
+				} else if (capturedPiece.className.match(/white/)) {
+					$("#white_info").append(capturedPiece);
+				}
+			}
+
 			movePiece(piece.boardPosition, newPosition);
 			piece.html = "";
 		} else {

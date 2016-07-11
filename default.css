@@ -2,6 +2,7 @@
 body {
 	text-align: center;
 	margin: 0;
+	margin-bottom: 20px;
 }
 #game_window {
 	display: inline-block;
@@ -62,4 +63,12 @@ tr.rank_1 td:nth-child(odd){
 .white {
 	font-weight: bold;
 	color: white;
+}
+#black_info {
+	display: inline-block;
+	background-color: lightgray;
+}
+#white_info {
+	display: inline-block;
+	background-color: gray;
 }
