@@ -1,8 +1,8 @@
 /* build the chessborad */
 body {
 	text-align: center;
-	margin: 0;
-	margin-bottom: 20px;
+	margin-right: 0;
+	margin-left: 0;
 }
 #game_window {
 	display: inline-block;
@@ -10,6 +10,8 @@ body {
 }
 h1 {
 	background-color: #7F8286;
+	border-bottom: thick solid #434041;
+	border-top: thick solid #434041;
 	color: white;
 	margin-top: 0;
 	padding-top: 20px;
@@ -17,8 +19,8 @@ h1 {
 }
 table {
 	border-collapse: collapse;
-	width: 500px;
-	height: 500px;
+	width: 400px;
+	height: 400px;
 	table-layout: fixed;
 }
 td {
@@ -66,18 +68,26 @@ tr.rank_1 td:nth-child(odd){
 	color: white;
 }
 #game_info {
+	border-bottom: thick solid #434041;
+	border-top: thick solid #434041;
 	margin-top: 1em;
+	background-color: #7F8286;
+	overflow: auto;
 }
 #black_info {
-	background-color: #7F8286;
-	width: 50%;
+	vertical-align: top;
+	margin-left: 25px;
+	width: 200px;
+	display: inline-block;
 	height: 120px;
-	float: right;
+	float:top;
 }
 #white_info {
-	background-color: #7F8286;
+	vertical-align: top;
+	float:top;
+	width: 200px;
+	margin-right: 25px;
+	display: inline-block;
 	color: white;
-	width: 50%;
 	height: 120px;
-	float: left;
 }
