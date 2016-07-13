@@ -9,15 +9,16 @@ body {
 	box-shadow: 0 0 25px -5px;
 }
 h1 {
-	background-color: lightgray;
+	background-color: #7F8286;
+	color: white;
 	margin-top: 0;
 	padding-top: 20px;
 	padding-bottom: 20px;
 }
 table {
 	border-collapse: collapse;
-	width: 400px;
-	height: 400px;
+	width: 500px;
+	height: 500px;
 	table-layout: fixed;
 }
 td {
@@ -30,25 +31,25 @@ tr.rank_8 td:nth-child(even),
 tr.rank_6 td:nth-child(even),
 tr.rank_4 td:nth-child(even),
 tr.rank_2 td:nth-child(even){
-	background-color: gray;
+	background-color: #7B9B4A;
 }
 tr.rank_8 td:nth-child(odd),
 tr.rank_6 td:nth-child(odd),
 tr.rank_4 td:nth-child(odd),
 tr.rank_2 td:nth-child(odd){
-	background-color: lightgray;
+	background-color: #B4C889;
 }
 tr.rank_7 td:nth-child(even),
 tr.rank_5 td:nth-child(even),
 tr.rank_3 td:nth-child(even),
 tr.rank_1 td:nth-child(even){
-	background-color: lightgray;
+	background-color: #B4C889;
 }
 tr.rank_7 td:nth-child(odd),
 tr.rank_5 td:nth-child(odd),
 tr.rank_3 td:nth-child(odd),
 tr.rank_1 td:nth-child(odd){
-	background-color: gray;
+	background-color: #7B9B4A;
 }
 
 #chessboard td:hover{
@@ -64,15 +65,19 @@ tr.rank_1 td:nth-child(odd){
 	font-weight: bold;
 	color: white;
 }
+#game_info {
+	margin-top: 1em;
+}
 #black_info {
+	background-color: #7F8286;
 	width: 50%;
 	height: 120px;
 	float: right;
-	background-color: lightgray;
 }
 #white_info {
+	background-color: #7F8286;
+	color: white;
 	width: 50%;
 	height: 120px;
 	float: left;
-	background-color: gray;
 }
