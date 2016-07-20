@@ -4,7 +4,7 @@ body {
 	margin-right: 0;
 	margin-left: 0;
 }
-#game_window {
+.game_window {
 	display: inline-block;
 	box-shadow: 0 0 25px -5px;
 }
@@ -54,7 +54,7 @@ tr.rank_1 td:nth-child(odd){
 	background-color: #7B9B4A;
 }
 
-#chessboard td:hover{
+.chessboard td:hover{
 	background-color: yellow;
 }
 /* now style the pieces */
@@ -67,27 +67,17 @@ tr.rank_1 td:nth-child(odd){
 	font-weight: bold;
 	color: white;
 }
-#game_info {
+.game_info {
 	border-bottom: thick solid #434041;
 	border-top: thick solid #434041;
 	margin-top: 1em;
 	background-color: #7F8286;
 	overflow: auto;
 }
-#black_info {
+.pieces_info {
 	vertical-align: top;
-	margin-left: 25px;
-	width: 200px;
-	display: inline-block;
-	height: 120px;
-	float:top;
-}
-#white_info {
-	vertical-align: top;
-	float:top;
 	width: 200px;
 	margin-right: 25px;
 	display: inline-block;
-	color: white;
 	height: 120px;
 }
