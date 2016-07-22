@@ -38,9 +38,9 @@ $(document).ready(function () {
 			var capturedPiece = this.childNodes[0];
 			if (capturedPiece && newPosition !== piece.boardPosition) {
 				if (capturedPiece.className.match(/black/)) {
-					$(capturedPiece).clone().appendTo($("#black_info"));
+					$(capturedPiece).clone().appendTo($(".black.pieces_info"));
 				} else if (capturedPiece.className.match(/white/)) {
-					$(capturedPiece).clone().appendTo($("#white_info"));
+					$(capturedPiece).clone().appendTo($(".white.pieces_info"));
 				}
 			}
 

@@ -19,9 +19,15 @@ h1 {
 }
 table {
 	border-collapse: collapse;
-	width: 400px;
-	height: 400px;
+	width: 300px;
+	height: 300px;
 	table-layout: fixed;
+}
+@media (min-width: 600px) {
+	table {
+		width: 500px;
+		height: 500px;
+	}
 }
 td {
 	height: 12%;
@@ -77,7 +83,6 @@ tr.rank_1 td:nth-child(odd){
 .pieces_info {
 	vertical-align: top;
 	width: 200px;
-	margin-right: 25px;
 	display: inline-block;
 	height: 120px;
 }
