@@ -10,7 +10,7 @@ movePiece = function(start, finish) {
 }
 
 posToCss = function(position) {
-	return('.rank_' + position.split("")[1] + ' > .file_' + position.split("")[0]);
+	return('.rank_' + position[1] + ' > .file_' + position[0]);
 }
 
 cssToPos = function(file, rank) {
