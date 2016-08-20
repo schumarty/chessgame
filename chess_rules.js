@@ -8,19 +8,14 @@ Chess = function() {
 		"        ",
 		"        ",
 		"PPPPPPPP",
-		"RNBQKBRR"
+		"RNBQKBNR"
 	];
 
 	this.activeColor = "w";
 
-	this.canCastle = {
-		"K": true,
-		"Q": true,
-		"k": true,
-		"q": true
-	};
+	this.castle = "KQkq";
 
-	this.enPassant = "";
+	this.enPassant = "-";
 
 	this.halfMoveClock = 0;
 	this.fullMoveClock = 1;
@@ -30,7 +25,7 @@ Chess = function() {
 
 	this.getMoves = function(alg) {
 		var pos = this._anToFen(alg);
-		var fenMoves = this._getValidMoves(pos.r, pos.f);
+		var fenMoves = this._getValidMoves(pos);
 		var anMoves = [];
 		for (i = 0; i < fenMoves.length; i++) {
 			anMoves.push(this._fenToAn(fenMoves[i]));
@@ -38,12 +33,47 @@ Chess = function() {
 		return(anMoves);
 	}
 
+	this.getFen = function() {
+		string = this._boardString()
+			+ " " + this.activeColor
+			+ " " + this.castle
+			+ " " + this.enPassant
+			+ " " + this.halfMoveClock
+			+ " " + this.fullMoveClock
+		;
+		return(string);
+	}
+
 // These are helper functions for the internal dirty work
 // All inputs and outputs describing board position use object of coordinates
 
-	this._isOnBoard = function(rank, file) {
-		if (rank >= 0 && rank < this.board.length
-			&& file >= 0 && file < this.board[0].length)
+	this._boardString = function() {
+		var string = "";
+		for (i = 0; i < this.board.length; i++) {
+			for (j = 0; j < this.board[i].length; j++) {
+				if (this.board[i][j] === " ") {
+					var lastChar = string.slice(-1);
+					if (lastChar.match(/[1-8]/)) {
+						console.log("match");
+						string = string.substring(0, string.length - 1);
+						string += parseInt(lastChar) + 1;
+					} else {
+						string += "1";
+					}
+				} else {
+					string += this.board[i][j];
+				}
+			}
+			if (i < this.board.length - 1) {
+				string += "/";
+			}
+		}
+		return(string);
+	}
+
+	this._isOnBoard = function(p) {
+		if (p.r >= 0 && p.r < this.board.length
+			&& p.f >= 0 && p.f < this.board[0].length)
 		{
 			return(true);
 		} else {
@@ -62,9 +92,9 @@ Chess = function() {
 		}
 	}
 
-	this._fenToAn = function(posObj) {
-		var algebraic = String.fromCharCode(97 + posObj.f);
-		algebraic += 8 - parseInt(posObj.r);
+	this._fenToAn = function(p) {
+		var algebraic = String.fromCharCode(97 + p.f);
+		algebraic += 8 - parseInt(p.r);
 		return(algebraic);
 	}
 	
@@ -74,21 +104,21 @@ Chess = function() {
 		return({r: rank, f: file});
 	}
 
-	this._getValidMoves = function(rank, file) {
+	this._getValidMoves = function(p) {
 		var possibleMoves = [
-			[rank - 1, file - 1],
-			[rank - 1, file],
-			[rank - 1, file + 1],
-			[rank, file - 1],
-			[rank, file + 1],
-			[rank + 1, file - 1],
-			[rank + 1, file],
-			[rank + 1, file + 1]
+			{r: p.r - 1, f: p.f - 1},
+			{r: p.r - 1, f: p.f},
+			{r: p.r - 1, f: p.f + 1},
+			{r: p.r,     f: p.f - 1},
+			{r: p.r,     f: p.f + 1},
+			{r: p.r + 1, f: p.f - 1},
+			{r: p.r + 1, f: p.f},
+			{r: p.r + 1, f: p.f + 1}
 		];
 		var validMoves = [];
 		for (i = 0; i < possibleMoves.length; i++) {
-			var pos = {r: possibleMoves[i][0], f: possibleMoves[i][1]};
-			if (this._isOnBoard(pos.r, pos.f)
+			var pos = possibleMoves[i];
+			if (this._isOnBoard(pos)
 				&& this.activeColor !== this._getColor(this.board[pos.r][pos.f]))
 			{
 				validMoves.push(pos);

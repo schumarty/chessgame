@@ -25,7 +25,10 @@ var piece = {
 	html: "",
 	boardPosition: ""
 };
+
+
 $(document).ready(function () {
+	chess = new Chess;
 	$("td").click(function () {
 		// only the selected spot will be orange
 		$("td").each(function() {
