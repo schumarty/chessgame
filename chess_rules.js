@@ -1,14 +1,14 @@
 Chess = function() {
 // We're going to store everything in variables that reseble FEN notation
 	this.board = [
-		"rnbqkbnr",
-		"pppppppp",
-		"        ",
-		"        ",
-		"        ",
-		"        ",
-		"PPPPPPPP",
-		"RNBQKBNR"
+		["r", "n", "b", "q", "k", "b", "n", "r"],
+		["p", "p", "p", "p", "p", "p", "p", "p"],
+		[" ", " ", " ", " ", " ", " ", " ", " "],
+		[" ", " ", " ", " ", " ", " ", " ", " "],
+		[" ", " ", " ", " ", " ", " ", " ", " "],
+		[" ", " ", " ", " ", " ", " ", " ", " "],
+		["P", "P", "P", "P", "P", "P", "P", "P"],
+		["R", "N", "B", "Q", "K", "B", "N", "R"]
 	];
 
 	this.activeColor = "w";
@@ -18,7 +18,7 @@ Chess = function() {
 	this.enPassant = "-";
 
 	this.halfMoveClock = 0;
-	this.fullMoveClock = 1;
+	this.fullMoveNumber = 1;
 
 // These are the functions used to interact with the object
 // All board positions in and out of the functions use algebraic notation
@@ -39,7 +39,7 @@ Chess = function() {
 			+ " " + this.castle
 			+ " " + this.enPassant
 			+ " " + this.halfMoveClock
-			+ " " + this.fullMoveClock
+			+ " " + this.fullMoveNumber
 		;
 		return(string);
 	}
@@ -54,7 +54,6 @@ Chess = function() {
 				if (this.board[i][j] === " ") {
 					var lastChar = string.slice(-1);
 					if (lastChar.match(/[1-8]/)) {
-						console.log("match");
 						string = string.substring(0, string.length - 1);
 						string += parseInt(lastChar) + 1;
 					} else {
