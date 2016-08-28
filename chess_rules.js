@@ -1,4 +1,4 @@
-Chess = function() {
+function Chess() {
 /*
  We're going to store everything in variables that reseble FEN notation
 */
@@ -28,11 +28,46 @@ Chess = function() {
  All board positions in and out of the functions use algebraic notation
 */
 
+Chess.prototype.play = function(startAlg, finishAlg) {
+	var strPos = this._anToFen(startAlg);
+	var endPos = this._anToFen(finishAlg);
+	var validMoves = this._getValidMoves(strPos);
+
+	if (this._getColor(this._getPiece(strPos)) !== this.activeColor) {
+		return [];
+	}
+
+	var endIsValid = false;
+	for (var i = 0; i < validMoves.length; i++) {
+		if (validMoves[i].r === endPos.r &&
+				validMoves[i].f === endPos.f) {
+			endIsValid = true;
+		}
+	}
+	if (endIsValid) {
+		var pieceHolder = this._getPiece(strPos);
+		this.board[strPos.r][strPos.f] = ' ';
+		this.board[endPos.r][endPos.f] = pieceHolder;
+	} else {
+		return [];
+	}
+
+	this.halfMoveClock += 1;
+	if (this.activeColor === 'b') {
+		this.activeColor = 'w';
+		this.fullMoveNumber += 1;
+	} else {
+		this.activeColor = 'b';
+	}
+
+	return [startAlg, finishAlg];
+}
+
 Chess.prototype.getMoves = function(alg) {
 	var pos = this._anToFen(alg);
 	var fenMoves = this._getValidMoves(pos);
 	var anMoves = [];
-	for (i = 0; i < fenMoves.length; i++) {
+	for (var i = 0; i < fenMoves.length; i++) {
 		anMoves.push(this._fenToAn(fenMoves[i]));
 	}
 	return anMoves;
@@ -47,6 +82,18 @@ Chess.prototype.getFen = function() {
 			' ' + this.fullMoveNumber;
 	return string;
 }
+
+Chess.prototype.pieceAt = function(alg) {
+	var pos = this._anToFen(alg);
+	return this._getPiece(pos);
+}
+
+Chess.prototype.pieceColor = function(alg) {
+	var pos = this._anToFen(alg);
+	var color = this._getColor(this._getPiece(pos));
+	return color;
+}
+
 /*
  These are helper functions for the internal dirty work
  All inputs and outputs describing board position use object of coordinates
@@ -54,8 +101,8 @@ Chess.prototype.getFen = function() {
 
 Chess.prototype._boardString = function() {
 	var string = '';
-	for (i = 0; i < this.board.length; i++) {
-		for (j = 0; j < this.board[i].length; j++) {
+	for (var i = 0; i < this.board.length; i++) {
+		for (var j = 0; j < this.board[i].length; j++) {
 			if (this.board[i][j] === ' ') {
 				var lastChar = string.slice(-1);
 				if (lastChar.match(/[1-8]/)) {
@@ -76,12 +123,16 @@ Chess.prototype._boardString = function() {
 }
 
 Chess.prototype._isOnBoard = function(p) {
-	if (p.r >= 0 && p.r < this.board.length
-			&& p.f >= 0 && p.f < this.board[0].length) {
+	if (p.r >= 0 && p.r < this.board.length && 
+			p.f >= 0 && p.f < this.board[0].length) {
 		return true;
 	} else {
 		return false;
 	}
+}
+
+Chess.prototype._getPiece = function(p) {
+	return this.board[p.r][p.f];
 }
 
 Chess.prototype._getColor = function(piece) {
@@ -119,10 +170,10 @@ Chess.prototype._getValidMoves = function(p) {
 		{r: p.r + 1, f: p.f + 1}
 	];
 	var validMoves = [];
-	for (i = 0; i < possibleMoves.length; i++) {
+	for (var i = 0; i < possibleMoves.length; i++) {
 		var pos = possibleMoves[i];
-		if (this._isOnBoard(pos)
-				&& this.activeColor !== this._getColor(this.board[pos.r][pos.f])) {
+		if (this._isOnBoard(pos) && 
+				this.activeColor !== this._getColor(this._getPiece(pos))) {
 			validMoves.push(pos);
 		}
 	}
