@@ -33,16 +33,12 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 	var endPos = this._anToFen(finishAlg);
 	var validMoves = this._getValidMoves(strPos);
 
-	if (this._getColor(this._getPiece(strPos)) !== this.activeColor) {
+	if (!this.canPlay(startAlg)) {
 		return [];
 	}
 
-	var endIsValid = false;
-	validMoves.forEach(function(square) {
-		if (square.r === endPos.r &&
-				square.f === endPos.f) {
-			endIsValid = true;
-		}
+	var endIsValid = validMoves.some(function(square) {
+		return square.r === endPos.r && square.f === endPos.f;
 	});
 	if (endIsValid) {
 		var pieceHolder = this._getPiece(strPos);
@@ -69,7 +65,7 @@ Chess.prototype.getMoves = function(alg) {
 	var anMoves = [];
 	fenMoves.forEach(function(square) {
 		anMoves.push(this._fenToAn(square));
-	});
+	}, this);
 	return anMoves;
 }
 
@@ -92,6 +88,11 @@ Chess.prototype.pieceColor = function(alg) {
 	var pos = this._anToFen(alg);
 	var color = this._getColor(this._getPiece(pos));
 	return color;
+}
+
+Chess.prototype.canPlay = function(alg) {
+	var pos = this._anToFen(alg);
+	return this._getColor(this._getPiece(pos)) === this.activeColor;
 }
 
 /*

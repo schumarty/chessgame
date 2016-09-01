@@ -20,40 +20,58 @@ cssToPos = function(file, rank) {
 	return(result);
 }
 
-// placeholder for piece if one is selected
-var piece = {
-	html: "",
-	boardPosition: ""
-};
+updateSquare = function(square) {
+	var selector = posToCss(square);
+	var piece = chess.pieceAt(square);
+	var colorAbbr = chess.pieceColor(square);
+	var color = "";
+	if (colorAbbr === "w") {
+		color = "white";
+	} else if (colorAbbr === "b") {
+		color = "black";
+	}
+	var newSpan = document.createElement("span");
+	newSpan.className = color;
+	newSpan.innerHTML = piece;
+	$(selector).html(newSpan);
+}
 
+// placeholder for piece if one is selected
+var oldSqr = "";
 
 $(document).ready(function () {
+	//initialize chess object
 	chess = new Chess;
+
+	// initialize the board
+	var rankArray = ["1", "2", "3", "4", "5", "6", "7", "8"];
+	var fileArray = ["a", "b", "c", "d", "e", "f", "g", "h"];
+	fileArray.forEach(function(file) {
+		rankArray.forEach(function(rank) {
+			updateSquare(file + rank);
+		});
+	});
+
 	$("td").click(function () {
 		// only the selected spot will be orange
 		$("td").each(function() {
 			this.removeAttribute("style");
 		});
 
-		if (piece.html) {
-			var newPosition = cssToPos(this.className, this.parentElement.className);
+		var selSqr = cssToPos(this.className, this.parentElement.className);
 
-			var capturedPiece = this.childNodes[0];
-			if (capturedPiece && newPosition !== piece.boardPosition) {
-				if (capturedPiece.className.match(/black/)) {
-					$(capturedPiece).clone().appendTo($(".black.pieces_info"));
-				} else if (capturedPiece.className.match(/white/)) {
-					$(capturedPiece).clone().appendTo($(".white.pieces_info"));
-				}
+		if (oldSqr) {
+			chess.play(oldSqr, selSqr).forEach(function(square) {
+				updateSquare(square);
+			});
+			
+			oldSqr = "";
+		} else {
+			if (chess.canPlay(selSqr)) {
+				oldSqr = selSqr;
+				$(this).css("background-color", "orange");
 			}
 
-			movePiece(piece.boardPosition, newPosition);
-			piece.html = "";
-		} else {
-			piece.html = $(this).html();
-			// only hightlight spot if it contains a piece we can move
-			if (piece.html) {$(this).css("background-color", "orange");}
-			piece.boardPosition = cssToPos(this.className, this.parentElement.className);
 		}
 	});
 });
