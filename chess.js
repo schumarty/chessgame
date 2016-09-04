@@ -70,6 +70,10 @@ $(document).ready(function () {
 			if (chess.canPlay(selSqr)) {
 				oldSqr = selSqr;
 				$(this).css("background-color", "orange");
+				
+				chess.getMoves(selSqr).forEach(function(square) {
+					$(posToCss(square)).css("background-color", "yellow");
+				});
 			}
 
 		}

@@ -31,11 +31,13 @@ function Chess() {
 Chess.prototype.play = function(startAlg, finishAlg) {
 	var strPos = this._anToFen(startAlg);
 	var endPos = this._anToFen(finishAlg);
-	var validMoves = this._getValidMoves(strPos);
+	var selPiece = this._getPiece(strPos);
 
 	if (!this.canPlay(startAlg)) {
 		return [];
 	}
+
+	var validMoves = this._getValidMoves(selPiece, strPos);
 
 	var endIsValid = validMoves.some(function(square) {
 		return square.r === endPos.r && square.f === endPos.f;
@@ -93,6 +95,18 @@ Chess.prototype.pieceColor = function(alg) {
 Chess.prototype.canPlay = function(alg) {
 	var pos = this._anToFen(alg);
 	return this._getColor(this._getPiece(pos)) === this.activeColor;
+}
+
+Chess.prototype.getMoves = function(alg) {
+	var pos = this._anToFen(alg);
+	var piece = this._getPiece(pos);
+	var moveList = [];
+
+	this._getValidMoves(piece, pos).forEach(function(square) {
+		moveList.push(this._fenToAn(square));
+	}, this);
+
+	return moveList;
 }
 
 /*
@@ -159,7 +173,7 @@ Chess.prototype._anToFen = function(algebraic) {
 	return {r: rank, f: file};
 }
 
-Chess.prototype._getValidMoves = function(p) {
+Chess.prototype._getKingMoves = function(p) {
 	var possibleMoves = [
 		{r: p.r - 1, f: p.f - 1},
 		{r: p.r - 1, f: p.f},
@@ -177,5 +191,134 @@ Chess.prototype._getValidMoves = function(p) {
 			validMoves.push(square);
 		}
 	}, this);
+	return validMoves;
+}
+
+Chess.prototype._getKnightMoves = function(p) {
+	var possibleMoves = [
+		{r: p.r - 2, f: p.f - 1},
+		{r: p.r - 2, f: p.f + 1},
+		{r: p.r - 1, f: p.f - 2},
+		{r: p.r - 1, f: p.f + 2},
+		{r: p.r + 1, f: p.f - 2},
+		{r: p.r + 1, f: p.f + 2},
+		{r: p.r + 2, f: p.f - 1},
+		{r: p.r + 2, f: p.f + 1}
+	];
+	var validMoves = [];
+	possibleMoves.forEach(function(square) {
+		if (this._isOnBoard(square) &&
+				this.activeColor !== this._getColor(this._getPiece(square))) {
+			validMoves.push(square);
+		}
+	}, this);
+	return validMoves;
+}
+
+Chess.prototype._generateRay = function(pos, rStep, fStep) {
+	possibleMoves = [];
+	p = {
+		r: pos.r,
+		f: pos.f
+	};
+
+	do {
+		p.r += rStep;
+		p.f += fStep;
+
+		if (this._isOnBoard(p) &&
+				this.activeColor !== this._getColor(this._getPiece(p))) {
+			possibleMoves.push({r: p.r, f:p.f});
+		}
+	} while (this._isOnBoard(p) && this._getPiece(p) === ' ');
+
+	return possibleMoves;
+}
+
+Chess.prototype._getRookMoves = function(p) {
+	var possibleMoves = [];
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 1, 0));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, -1, 0));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 0, 1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 0, -1));
+
+	return possibleMoves;
+}
+
+Chess.prototype._getBishopMoves = function(p) {
+	var possibleMoves = [];
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 1, 1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 1, -1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, -1, 1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, -1, -1));
+
+	return possibleMoves;
+}
+
+Chess.prototype._getQueenMoves = function(p) {
+	var possibleMoves = [];
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 1, 0));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, -1, 0));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 0, 1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 0, -1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 1, 1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, 1, -1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, -1, 1));
+	possibleMoves = possibleMoves.concat(this._generateRay(p, -1, -1));
+
+	return possibleMoves;
+}
+
+Chess.prototype._getPawnMoves = function(p) {
+	var possibleMoves = [];
+	var rankDir, startRank, enemyColor, testPos;
+	
+	if (this.activeColor === 'w') {
+		rankDir = -1;
+		startRank = 6;
+		enemyColor = 'b';
+	} else {
+		rankDir = 1;
+		startRank = 1;
+		enemyColor = 'w';
+	}
+	
+	testPos = {r: p.r + rankDir, f: p.f};
+	if (this._getPiece(testPos) === ' ') {
+		possibleMoves.push(testPos);
+		testPos = {r: p.r + (2 * rankDir), f: p.f};
+			if (p.r === startRank && this._getPiece(testPos) === ' ') {
+			possibleMoves.push(testPos);
+		}
+	}
+
+	[-1, 1].forEach(function(fileDir) {
+		testPos = {r: p.r + rankDir, f: p.f + fileDir};
+		if (this._isOnBoard(testPos) &&
+				this._getColor(this._getPiece(testPos)) === enemyColor) {
+			possibleMoves.push(testPos);
+		}
+	}, this);
+
+	return possibleMoves;
+}
+
+Chess.prototype._getValidMoves = function(selPiece, strPos) {
+	var validMoves = [];
+
+	if (selPiece === 'n' || selPiece === 'N') {
+		validMoves = this._getKnightMoves(strPos);
+	} else if (selPiece === 'r' || selPiece === 'R') {
+		validMoves = this._getRookMoves(strPos);
+	} else if (selPiece === 'b' || selPiece === 'B') {
+		validMoves = this._getBishopMoves(strPos);
+	} else if (selPiece === 'q' || selPiece === 'Q') {
+		validMoves = this._getQueenMoves(strPos);
+	} else if (selPiece === 'p' || selPiece === 'P') {
+		validMoves = this._getPawnMoves(strPos);
+	} else if (selPiece === 'k' || selPiece === 'K') {
+		validMoves = this._getKingMoves(strPos);
+	}
+
 	return validMoves;
 }
