@@ -60,6 +60,11 @@ tr.rank_1 td:nth-child(odd){
 	background-color: #7B9B4A;
 }
 
+.piece {
+	max-width: 85%;
+	max-height: 85%;
+}
+
 .chessboard td:hover{
 	background-color: yellow;
 }

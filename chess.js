@@ -31,9 +31,12 @@ updateSquare = function(square) {
 		color = "black";
 	}
 	var newSpan = document.createElement("span");
-	newSpan.className = color;
-	newSpan.innerHTML = piece;
-	$(selector).html(newSpan);
+
+	var newImg = document.createElement("img");
+	newImg.src = "pieces/" + piece + ".png";
+	newImg.alt = piece;
+	newImg.className = "piece";
+	$(selector).html(newImg);
 }
 
 // placeholder for piece if one is selected
