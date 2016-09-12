@@ -32,11 +32,15 @@ updateSquare = function(square) {
 	}
 	var newSpan = document.createElement("span");
 
-	var newImg = document.createElement("img");
-	newImg.src = "pieces/" + piece + ".png";
-	newImg.alt = piece;
-	newImg.className = "piece";
-	$(selector).html(newImg);
+	if (piece === " ") {
+		$(selector).html("");
+	} else {
+		var newImg = document.createElement("img");
+		newImg.src = "pieces/" + piece + ".png";
+		newImg.alt = piece;
+		newImg.className = "piece";
+		$(selector).html(newImg);
+	}
 }
 
 // placeholder for piece if one is selected

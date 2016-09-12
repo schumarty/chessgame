@@ -32,6 +32,7 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 	var strPos = this._anToFen(startAlg);
 	var endPos = this._anToFen(finishAlg);
 	var selPiece = this._getPiece(strPos);
+	var updatedSquares = [];
 
 	if (!this.canPlay(startAlg)) {
 		return [];
@@ -46,6 +47,25 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 		var pieceHolder = this._getPiece(strPos);
 		this.board[strPos.r][strPos.f] = ' ';
 		this.board[endPos.r][endPos.f] = pieceHolder;
+		updatedSquares.push(startAlg);
+		updatedSquares.push(finishAlg);
+
+		if (selPiece.toLowerCase() === 'p' &&
+				finishAlg === this.enPassant) {
+			var dir;
+			this.activeColor === 'w' ? dir = -1 : dir = 1;
+			this.board[endPos.r - dir][endPos.f] = ' ';
+			updatedSquares.push(this._fenToAn({r: endPos.r -dir, f: endPos.f}));
+		}
+
+		if (selPiece.toLowerCase() === 'p' &&
+				Math.abs(strPos.r - endPos.r) === 2) {
+			var dir;
+			this.activeColor === 'w' ? dir = -1 : dir = 1;
+			this.enPassant = this._fenToAn({r: endPos.r - dir, f: endPos.f});
+		} else {
+			this.enPassant = '-';
+		}
 	} else {
 		return [];
 	}
@@ -58,7 +78,7 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 		this.activeColor = 'b';
 	}
 
-	return [startAlg, finishAlg];
+	return updatedSquares;
 }
 
 Chess.prototype.getMoves = function(alg) {
@@ -283,20 +303,27 @@ Chess.prototype._getPawnMoves = function(p) {
 		enemyColor = 'w';
 	}
 	
+// Test if the pawn can move forward
 	testPos = {r: p.r + rankDir, f: p.f};
 	if (this._getPiece(testPos) === ' ') {
 		possibleMoves.push(testPos);
 		testPos = {r: p.r + (2 * rankDir), f: p.f};
-			if (p.r === startRank && this._getPiece(testPos) === ' ') {
+		if (p.r === startRank && this._getPiece(testPos) === ' ') {
 			possibleMoves.push(testPos);
 		}
 	}
 
+// Find squares that the pawn can capture
 	[-1, 1].forEach(function(fileDir) {
 		testPos = {r: p.r + rankDir, f: p.f + fileDir};
 		if (this._isOnBoard(testPos) &&
 				this._getColor(this._getPiece(testPos)) === enemyColor) {
 			possibleMoves.push(testPos);
+		} else if (this.enPassant !== '-') {
+			var pasPos = this._anToFen(this.enPassant);
+			if (testPos.r === pasPos.r && testPos.f === pasPos.f) {
+				possibleMoves.push(testPos);
+			}
 		}
 	}, this);
 

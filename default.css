@@ -1,4 +1,6 @@
-/* build the chessborad */
+* {
+	box-sizing: border-box;
+}
 body {
 	text-align: center;
 	margin-right: 0;
@@ -30,10 +32,11 @@ table {
 	}
 }
 td {
-	height: 12%;
-	width: 12%;
+	height: 12.5%;
+	width: 12.5%;
 	text-align: center;
 	vertical-align: middle;
+	overflow: hidden;
 }
 tr.rank_8 td:nth-child(even),
 tr.rank_6 td:nth-child(even),
@@ -61,8 +64,9 @@ tr.rank_1 td:nth-child(odd){
 }
 
 .piece {
-	max-width: 85%;
-	max-height: 85%;
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .chessboard td:hover{
