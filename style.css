@@ -21,22 +21,20 @@ h1 {
 }
 table {
 	border-collapse: collapse;
-	width: 300px;
-	height: 300px;
 	table-layout: fixed;
 }
-@media (min-width: 600px) {
-	table {
-		width: 500px;
-		height: 500px;
-	}
-}
 td {
-	height: 12.5%;
-	width: 12.5%;
+	height: 35px;
+	width: 35px;
 	text-align: center;
 	vertical-align: middle;
 	overflow: hidden;
+}
+@media (min-width: 600px) {
+	td {
+	height: 60px;
+	width: 60px;
+	}
 }
 tr.rank_8 td:nth-child(even),
 tr.rank_6 td:nth-child(even),
