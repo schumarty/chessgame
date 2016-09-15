@@ -33,6 +33,9 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 	var endPos = this._anToFen(finishAlg);
 	var selPiece = this._getPiece(strPos);
 	var updatedSquares = [];
+	var backrank;
+
+	this.activeColor === 'w' ? backrank = 7 : backrank = 0;
 
 	if (!this.canPlay(startAlg)) {
 		return [];
@@ -44,11 +47,9 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 		return square.r === endPos.r && square.f === endPos.f;
 	});
 	if (endIsValid) {
-		var pieceHolder = this._getPiece(strPos);
+		this.board[endPos.r][endPos.f] = this.board[strPos.r][strPos.f];
 		this.board[strPos.r][strPos.f] = ' ';
-		this.board[endPos.r][endPos.f] = pieceHolder;
-		updatedSquares.push(startAlg);
-		updatedSquares.push(finishAlg);
+		updatedSquares.push(startAlg, finishAlg);
 
 		if (selPiece.toLowerCase() === 'p' &&
 				finishAlg === this.enPassant) {
@@ -66,6 +67,34 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 		} else {
 			this.enPassant = '-';
 		}
+
+		if (selPiece.toLowerCase() === 'r') {
+			if (strPos.r === backrank && strPos.f === 0) {
+				this._removeCastleRight('q');
+			} else if (strPos.r === backrank && strPos.f === 7) {
+				this._removeCastleRight('k');
+			}
+		}
+
+		if (selPiece.toLowerCase() === 'k') {
+			if (strPos.r === backrank && strPos.f === 4) {
+				this._removeCastleRight('q');
+				this._removeCastleRight('k');
+				
+				if (endPos.f === 2) {
+					this.board[backrank][3] = this.board[backrank][0];
+					this.board[backrank][0] = ' ';
+					updatedSquares.push(this._fenToAn({r: backrank, f: 3}),
+							this._fenToAn({r:backrank, f: 0}));
+				} else if (endPos.f === 6) {
+					this.board[backrank][5] = this.board[backrank][7];
+					this.board[backrank][7] = ' ';
+					updatedSquares.push(this._fenToAn({r: backrank, f: 5}),
+							this._fenToAn({r:backrank, f: 7}));
+				}
+			}
+		}
+
 	} else {
 		return [];
 	}
@@ -193,7 +222,37 @@ Chess.prototype._anToFen = function(algebraic) {
 	return {r: rank, f: file};
 }
 
+Chess.prototype._removeCastleRight = function(castleChar) {
+	if (this.activeColor === 'w') {
+		castleChar = castleChar.toUpperCase();
+	} else {
+		castleChar = castleChar.toLowerCase();
+	}
+
+	this.castle = this.castle.replace(castleChar, '');
+
+	if (this.castle === '') {
+		this.castle = '-';
+	}
+}
+
+Chess.prototype._checkCastleRight = function(castleChar) {
+	if (this.activeColor === 'w') {
+		castleChar = castleChar.toUpperCase();
+	} else {
+		castleChar = castleChar.toLowerCase();
+	}
+
+	return this.castle.split('').some(function(c) {
+		console.log(castleChar + " , " + c);
+		return c === castleChar;
+	});
+}
+
 Chess.prototype._getKingMoves = function(p) {
+	var backrank;
+	this.activeColor === 'w' ? backrank = 7 : backrank = 0;
+
 	var possibleMoves = [
 		{r: p.r - 1, f: p.f - 1},
 		{r: p.r - 1, f: p.f},
@@ -204,6 +263,7 @@ Chess.prototype._getKingMoves = function(p) {
 		{r: p.r + 1, f: p.f},
 		{r: p.r + 1, f: p.f + 1}
 	];
+
 	var validMoves = [];
 	possibleMoves.forEach(function(square) {
 		if (this._isOnBoard(square) &&
@@ -211,6 +271,18 @@ Chess.prototype._getKingMoves = function(p) {
 			validMoves.push(square);
 		}
 	}, this);
+
+	if (this._checkCastleRight('k') &&
+			this._getPiece({r: backrank, f: 5}) === ' ' &&
+			this._getPiece({r: backrank, f: 6}) === ' ') {
+		validMoves.push({r: backrank, f: 6});
+	} else if (this._checkCastleRight('q') &&
+			this._getPiece({r: backrank, f: 3}) === ' ' &&
+			this._getPiece({r: backrank, f: 2}) === ' ' &&
+			this._getPiece({r: backrank, f: 1}) === ' ') {
+		validMoves.push({r: backrank, f: 2});
+	}
+			
 	return validMoves;
 }
 
