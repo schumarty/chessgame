@@ -70,17 +70,19 @@ $(document).ready(function () {
 		if (oldSqr) {
 			var capturedPiece = $(posToCss(selSqr)).html();
 
-			chess.play(oldSqr, selSqr).forEach(function(square) {
+			var squaresToUpdate = chess.play(oldSqr, selSqr)
+// Very messy hack to register pieces captured en passant
+			if (squaresToUpdate.length === 3) {
+				capturedPiece = $(posToCss(squaresToUpdate[2])).html();
+			}
+			squaresToUpdate.forEach(function(square) {
 				updateSquare(square);
 			});
 
-			console.log(typeof(capturedPiece));
-			if (capturedPiece) {
+			if (capturedPiece && squaresToUpdate.length > 0) {
 				if ($(capturedPiece).hasClass("white")) {
-					console.log("captured a white piece");
 					$(".white.pieces_info").append(capturedPiece);
 				} else if ($(capturedPiece).hasClass("black")) {
-					console.log("captured a black piece");
 					$(".black.pieces_info").append(capturedPiece);
 				}
 			}
