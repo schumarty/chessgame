@@ -93,3 +93,6 @@ tr.rank_1 td:nth-child(odd){
 	display: inline-block;
 	height: 120px;
 }
+.pieces_info .piece {
+	display: inline-block;
+}

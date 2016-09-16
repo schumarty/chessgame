@@ -38,7 +38,7 @@ updateSquare = function(square) {
 		var newImg = document.createElement("img");
 		newImg.src = "pieces/" + piece + ".png";
 		newImg.alt = piece;
-		newImg.className = "piece";
+		newImg.className = color + " piece";
 		$(selector).html(newImg);
 	}
 }
@@ -68,9 +68,22 @@ $(document).ready(function () {
 		var selSqr = cssToPos(this.className, this.parentElement.className);
 
 		if (oldSqr) {
+			var capturedPiece = $(posToCss(selSqr)).html();
+
 			chess.play(oldSqr, selSqr).forEach(function(square) {
 				updateSquare(square);
 			});
+
+			console.log(typeof(capturedPiece));
+			if (capturedPiece) {
+				if ($(capturedPiece).hasClass("white")) {
+					console.log("captured a white piece");
+					$(".white.pieces_info").append(capturedPiece);
+				} else if ($(capturedPiece).hasClass("black")) {
+					console.log("captured a black piece");
+					$(".black.pieces_info").append(capturedPiece);
+				}
+			}
 			
 			oldSqr = "";
 		} else {
