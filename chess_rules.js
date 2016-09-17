@@ -71,22 +71,21 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 			}
 		}
 
-		if (selPiece.toLowerCase() === 'k') {
-			if (strPos.r === backrank && strPos.f === 4) {
-				this._removeCastleRight('q');
-				this._removeCastleRight('k');
-				
-				if (endPos.f === 2) {
-					this.board[backrank][3] = this.board[backrank][0];
-					this.board[backrank][0] = ' ';
-					updatedSquares.push(this._fenToAn({r: backrank, f: 3}),
-							this._fenToAn({r:backrank, f: 0}));
-				} else if (endPos.f === 6) {
-					this.board[backrank][5] = this.board[backrank][7];
-					this.board[backrank][7] = ' ';
-					updatedSquares.push(this._fenToAn({r: backrank, f: 5}),
-							this._fenToAn({r:backrank, f: 7}));
-				}
+		if (selPiece.toLowerCase() === 'k' &&
+				strPos.r === backrank && strPos.f === 4) {
+			this._removeCastleRight('q');
+			this._removeCastleRight('k');
+			
+			if (endPos.f === 2) {
+				this.board[backrank][3] = this.board[backrank][0];
+				this.board[backrank][0] = ' ';
+				updatedSquares.push(this._fenToAn({r: backrank, f: 3}),
+						this._fenToAn({r:backrank, f: 0}));
+			} else if (endPos.f === 6) {
+				this.board[backrank][5] = this.board[backrank][7];
+				this.board[backrank][7] = ' ';
+				updatedSquares.push(this._fenToAn({r: backrank, f: 5}),
+						this._fenToAn({r:backrank, f: 7}));
 			}
 		}
 

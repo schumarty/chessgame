@@ -89,10 +89,12 @@ tr.rank_1 td:nth-child(odd){
 }
 .pieces_info {
 	vertical-align: top;
-	width: 200px;
+	width: 180px;
 	display: inline-block;
-	height: 120px;
+	height: 180px;
 }
 .pieces_info .piece {
 	display: inline-block;
+	max-width: 30px;
+	max-height: 30px;
 }
