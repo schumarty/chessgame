@@ -100,4 +100,14 @@ tr.rank_1 td:nth-child(odd){
 }
 .promo_popup {
 	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 280px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 9em;
+	background-color: white;
+	border: 2px solid black;
 }
