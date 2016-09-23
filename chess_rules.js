@@ -28,12 +28,13 @@ function Chess() {
  All board positions in and out of the functions use algebraic notation
 */
 
-Chess.prototype.play = function(startAlg, finishAlg) {
+Chess.prototype.play = function(startAlg, finishAlg, promotion) {
 	var strPos = this._anToFen(startAlg);
 	var endPos = this._anToFen(finishAlg);
 	var selPiece = this._getPiece(strPos);
 	var updatedSquares = [];
 	var backrank = (this.activeColor === 'w') ? 7 : 0;
+	var lastRank = (this.activeColor === 'w') ? 0 : 7;
 	var dir = (this.activeColor === 'w') ? -1 : 1;
 
 	if (!this.canPlay(startAlg)) {
@@ -63,6 +64,16 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 			this.enPassant = '-';
 		}
 
+		if (selPiece.toLowerCase() === 'p' &&
+				endPos.r === lastRank) {
+			promotion = (this.activeColor === 'w') ? 
+				promotion.toUpperCase() :
+				promotion.toLowerCase()
+			;
+
+			this.board[endPos.r][endPos.f] = promotion;
+		}
+
 		if (selPiece.toLowerCase() === 'r') {
 			if (strPos.r === backrank && strPos.f === 0) {
 				this._removeCastleRight('q');
@@ -88,7 +99,6 @@ Chess.prototype.play = function(startAlg, finishAlg) {
 						this._fenToAn({r:backrank, f: 7}));
 			}
 		}
-
 	} else {
 		return [];
 	}

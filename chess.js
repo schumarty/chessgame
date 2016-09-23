@@ -43,6 +43,50 @@ updateSquare = function(square) {
 	}
 }
 
+refreshBoard = function() {
+	var rankArray = ["1", "2", "3", "4", "5", "6", "7", "8"];
+	var fileArray = ["a", "b", "c", "d", "e", "f", "g", "h"];
+	fileArray.forEach(function(file) {
+		rankArray.forEach(function(rank) {
+			updateSquare(file + rank);
+		});
+	});
+}
+
+openPromotionBox = function(oldSqr, selSqr, capturedPiece) {
+	$(".promo_popup").show();
+	$("#promo_ok").click({start:oldSqr, finish:selSqr},function(ev) {
+		var promotionPiece = $("input[name=promotion]:checked").val();
+		console.log(ev.data.start + " " + ev.data.finish + " " + promotionPiece);
+		playMove(ev.data.start, ev.data.finish, promotionPiece);
+		$(".promo_popup").hide();
+	});
+}
+
+/*
+*	Wrapper for the chess opjects capture method
+*/
+playMove = function(start, finish, promotion) {
+	var capturedPiece = $(posToCss(finish)).html();
+	var squaresToUpdate = chess.play(start, finish, promotion)
+// Messy hack to register pieces captured en passant
+	if (squaresToUpdate.length === 3) {
+		capturedPiece = $(posToCss(squaresToUpdate[2])).html();
+	}
+	squaresToUpdate.forEach(function(square) {
+		updateSquare(square);
+	});
+
+// if squaresToUpdate is 0 the selected piece hasn't actually been captured
+	if (capturedPiece && squaresToUpdate.length > 0) {
+		if ($(capturedPiece).hasClass("white")) {
+			$(".white.pieces_info").append(capturedPiece);
+		} else if ($(capturedPiece).hasClass("black")) {
+			$(".black.pieces_info").append(capturedPiece);
+		}
+	}
+}	
+
 // placeholder for piece if one is selected
 var oldSqr = "";
 
@@ -51,13 +95,7 @@ $(document).ready(function () {
 	chess = new Chess;
 
 	// initialize the board
-	var rankArray = ["1", "2", "3", "4", "5", "6", "7", "8"];
-	var fileArray = ["a", "b", "c", "d", "e", "f", "g", "h"];
-	fileArray.forEach(function(file) {
-		rankArray.forEach(function(rank) {
-			updateSquare(file + rank);
-		});
-	});
+	refreshBoard()
 
 	$("td").click(function () {
 		// only the selected spot will be orange
@@ -68,25 +106,15 @@ $(document).ready(function () {
 		var selSqr = cssToPos(this.className, this.parentElement.className);
 
 		if (oldSqr) {
-			var capturedPiece = $(posToCss(selSqr)).html();
 
-			var squaresToUpdate = chess.play(oldSqr, selSqr)
-// Very messy hack to register pieces captured en passant
-			if (squaresToUpdate.length === 3) {
-				capturedPiece = $(posToCss(squaresToUpdate[2])).html();
+			if (chess.pieceAt(oldSqr).toLowerCase() === "p" &&
+					selSqr.match(/1|8/)) {
+				console.log("open promo box");
+				openPromotionBox(oldSqr, selSqr);
+			} else {
+				playMove(oldSqr, selSqr);
 			}
-			squaresToUpdate.forEach(function(square) {
-				updateSquare(square);
-			});
 
-			if (capturedPiece && squaresToUpdate.length > 0) {
-				if ($(capturedPiece).hasClass("white")) {
-					$(".white.pieces_info").append(capturedPiece);
-				} else if ($(capturedPiece).hasClass("black")) {
-					$(".black.pieces_info").append(capturedPiece);
-				}
-			}
-			
 			oldSqr = "";
 		} else {
 			if (chess.canPlay(selSqr)) {

@@ -98,3 +98,6 @@ tr.rank_1 td:nth-child(odd){
 	max-width: 30px;
 	max-height: 30px;
 }
+.promo_popup {
+	display: none;
+}
