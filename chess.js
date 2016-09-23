@@ -57,8 +57,10 @@ openPromotionBox = function(oldSqr, selSqr, capturedPiece) {
 	$(".promo_popup").show();
 	$("#promo_ok").click({start:oldSqr, finish:selSqr},function(ev) {
 		var promotionPiece = $("input[name=promotion]:checked").val();
-		console.log(ev.data.start + " " + ev.data.finish + " " + promotionPiece);
+
 		playMove(ev.data.start, ev.data.finish, promotionPiece);
+
+		$("#promo_ok").unbind("click");
 		$(".promo_popup").hide();
 	});
 }
@@ -109,7 +111,6 @@ $(document).ready(function () {
 
 			if (chess.pieceAt(oldSqr).toLowerCase() === "p" &&
 					selSqr.match(/1|8/)) {
-				console.log("open promo box");
 				openPromotionBox(oldSqr, selSqr);
 			} else {
 				playMove(oldSqr, selSqr);
