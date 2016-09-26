@@ -207,11 +207,7 @@ Chess.prototype._getColor = function(piece) {
 	if (piece === ' ') {
 		return undefined;
 	}
-	if (piece === piece.toUpperCase()){
-		return 'w';
-	} else {
-		return 'b';
-	}
+	return (piece === piece.toUpperCase()) ? 'w' : 'b';
 };
 
 Chess.prototype._fenToAn = function(p) {
@@ -250,6 +246,22 @@ Chess.prototype._checkCastleRight = function(castleChar) {
 	return this.castle.split('').some(function(c) {
 		return c === castleChar;
 	});
+};
+
+Chess.prototype._findKing = function(color) {
+	if (!color) {
+		color = this.activeColor;
+	}
+
+	var king = (color === 'w') ? 'K' : 'k';
+
+	for (var r = 0; r < this.board.length; r++) {
+		for (var f = 0; f < this.board[r].length; f++) {
+			if (this.board[r][f] === king) {
+				return {r: r, f: f};
+			}
+		}
+	}
 };
 
 Chess.prototype._getKingMoves = function(p) {

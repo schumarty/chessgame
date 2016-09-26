@@ -67,9 +67,6 @@ tr.rank_1 td:nth-child(odd){
 	max-height: 100%;
 }
 
-.chessboard td:hover{
-	background-color: yellow;
-}
 /* now style the pieces */
 .black {
 	font-weight: bold;
