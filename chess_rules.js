@@ -111,6 +111,10 @@ Chess.prototype.play = function(startAlg, finishAlg, promotion) {
 		this.activeColor = 'b';
 	}
 
+	if (this._testCheck()) {
+		console.log("check!");
+	}
+
 	return updatedSquares;
 };
 
@@ -263,6 +267,55 @@ Chess.prototype._findKing = function(color) {
 		}
 	}
 };
+
+Chess.prototype._testCheck = function() {
+	var kingIsChecked = false;
+	var kingLoc = this._findKing();
+	var rankDir = (this.activeColor === 'w') ? -1 : 1;
+
+	kingIsChecked = this._getKingMoves(kingLoc).some(function(square) {
+		return this._getPiece(square).match(/k/i);
+	}, this);
+	if (kingIsChecked) {
+		return true;
+	}
+
+	kingIsChecked = this._getKnightMoves(kingLoc).some(function(square) {
+		return this._getPiece(square).match(/n/i);
+	}, this);
+	if (kingIsChecked) {
+		return true;
+	}
+
+	kingIsChecked = this._getBishopMoves(kingLoc).some(function(square) {
+		return this._getPiece(square).match(/b|q/i);
+	}, this);
+	if (kingIsChecked) {
+		return true;
+	}
+
+	kingIsChecked = this._getRookMoves(kingLoc).some(function(square) {
+		return this._getPiece(square).match(/r|q/i);
+	}, this);
+	if (kingIsChecked) {
+		return true;
+	}
+
+	[-1, 1].forEach(function(fileDir) {
+		var testPos = {r: kingLoc.r + rankDir, f: kingLoc.f + fileDir};
+		var enemyPawn = (this.activeColor === 'w') ? 'p' : 'P';
+
+		if (this._isOnBoard(testPos) &&
+				this._getPiece(testPos) === enemyPawn) {
+			kingIsChecked = true;
+		}
+	}, this);
+	if (kingIsChecked) {
+		return true;
+	}
+
+};
+
 
 Chess.prototype._getKingMoves = function(p) {
 	var backrank = (this.activeColor === 'w') ? 7 : 0;
