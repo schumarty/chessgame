@@ -108,8 +108,13 @@ $(document).ready(function () {
 		var selSqr = cssToPos(this.className, this.parentElement.className);
 
 		if (oldSqr) {
+			
+			var newSquareIsValid = chess.getMoves(oldSqr).some(function(square) {
+				return selSqr === square;
+			});
 
 			if (chess.pieceAt(oldSqr).toLowerCase() === "p" &&
+					newSquareIsValid &&
 					selSqr.match(/1|8/)) {
 				openPromotionBox(oldSqr, selSqr);
 			} else {
