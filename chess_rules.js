@@ -316,7 +316,6 @@ Chess.prototype._testCheck = function() {
 
 };
 
-
 Chess.prototype._getKingMoves = function(p) {
 	var backrank = (this.activeColor === 'w') ? 7 : 0;
 
@@ -470,21 +469,36 @@ Chess.prototype._getPawnMoves = function(p) {
 };
 
 Chess.prototype._getValidMoves = function(selPiece, strPos) {
+	var possibleMoves = [];
 	var validMoves = [];
+	var endPiece;
 
 	if (selPiece === 'n' || selPiece === 'N') {
-		validMoves = this._getKnightMoves(strPos);
+		possibleMoves = this._getKnightMoves(strPos);
 	} else if (selPiece === 'r' || selPiece === 'R') {
-		validMoves = this._getRookMoves(strPos);
+		possibleMoves = this._getRookMoves(strPos);
 	} else if (selPiece === 'b' || selPiece === 'B') {
-		validMoves = this._getBishopMoves(strPos);
+		possibleMoves = this._getBishopMoves(strPos);
 	} else if (selPiece === 'q' || selPiece === 'Q') {
-		validMoves = this._getQueenMoves(strPos);
+		possibleMoves = this._getQueenMoves(strPos);
 	} else if (selPiece === 'p' || selPiece === 'P') {
-		validMoves = this._getPawnMoves(strPos);
+		possibleMoves = this._getPawnMoves(strPos);
 	} else if (selPiece === 'k' || selPiece === 'K') {
-		validMoves = this._getKingMoves(strPos);
+		possibleMoves = this._getKingMoves(strPos);
 	}
+
+// Messing with board like this seams messy to me but I have yet to come up
+// with a better way of removing illegal moves due to self-checking.
+	possibleMoves.forEach(function(endPos) {
+		endPiece = this._getPiece(endPos);
+		this.board[strPos.r][strPos.f] = ' ';
+		this.board[endPos.r][endPos.f] = selPiece;
+		if (!this._testCheck()) {
+			validMoves.push(endPos);
+		}
+		this.board[strPos.r][strPos.f] = selPiece;
+		this.board[endPos.r][endPos.f] = endPiece;
+	}, this);
 
 	return validMoves;
 };
