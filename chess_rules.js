@@ -332,7 +332,8 @@ Chess.prototype._getKingMoves = function(p) {
 			this._getPiece({r: backrank, f: 5}) === ' ' &&
 			this._getPiece({r: backrank, f: 6}) === ' ') {
 		validMoves.push({r: backrank, f: 6});
-	} else if (this._checkCastleRight('q') &&
+	}
+	if (this._checkCastleRight('q') &&
 			this._getPiece({r: backrank, f: 3}) === ' ' &&
 			this._getPiece({r: backrank, f: 2}) === ' ' &&
 			this._getPiece({r: backrank, f: 1}) === ' ') {
