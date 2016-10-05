@@ -118,16 +118,6 @@ Chess.prototype.play = function(startAlg, finishAlg, promotion) {
 	return updatedSquares;
 };
 
-Chess.prototype.getMoves = function(alg) {
-	var pos = this._anToFen(alg);
-	var fenMoves = this._getValidMoves(pos);
-	var anMoves = [];
-	fenMoves.forEach(function(square) {
-		anMoves.push(this._fenToAn(square));
-	}, this);
-	return anMoves;
-};
-
 Chess.prototype.getFen = function() {
 	var string = this._boardString() + 
 			' ' + this.activeColor +
@@ -494,11 +484,13 @@ Chess.prototype._getValidMoves = function(selPiece, strPos) {
 		this.board[strPos.r][strPos.f] = ' ';
 		this.board[endPos.r][endPos.f] = selPiece;
 		if (!this._testCheck()) {
-// Ok This is a little insane but... it works!
+// Ensure king doesn't pass through check during castling moves
+// Ok this is a little insane but... it works!
 			if (selPiece.match(/k/i) &&
 					Math.abs(strPos.f - endPos.f) > 1) {
 				var direction = (strPos.f < endPos.f) ? 1 : -1;
 				this.board[strPos.r][strPos.f + direction] = selPiece;
+				this.board[endPos.r][endPos.f] = ' ';
 				if (!this._testCheck()) {
 					validMoves.push(endPos);
 				}
