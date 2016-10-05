@@ -494,7 +494,18 @@ Chess.prototype._getValidMoves = function(selPiece, strPos) {
 		this.board[strPos.r][strPos.f] = ' ';
 		this.board[endPos.r][endPos.f] = selPiece;
 		if (!this._testCheck()) {
-			validMoves.push(endPos);
+// Ok This is a little insane but... it works!
+			if (selPiece.match(/k/i) &&
+					Math.abs(strPos.f - endPos.f) > 1) {
+				var direction = (strPos.f < endPos.f) ? 1 : -1;
+				this.board[strPos.r][strPos.f + direction] = selPiece;
+				if (!this._testCheck()) {
+					validMoves.push(endPos);
+				}
+				this.board[strPos.r][strPos.f + direction] = ' ';
+			} else {
+				validMoves.push(endPos);
+			}
 		}
 		this.board[strPos.r][strPos.f] = selPiece;
 		this.board[endPos.r][endPos.f] = endPiece;
