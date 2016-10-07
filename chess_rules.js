@@ -163,9 +163,9 @@ Chess.prototype.getMoves = function(alg) {
 
 Chess.prototype._boardString = function() {
 	var string = '';
-	for (var i = 0; i < this.board.length; i++) {
-		for (var j = 0; j < this.board[i].length; j++) {
-			if (this.board[i][j] === ' ') {
+	for (var r = 0; r < this.board.length; r++) {
+		for (var f = 0; f < this.board[r].length; f++) {
+			if (this.board[r][f] === ' ') {
 				var lastChar = string.slice(-1);
 				if (lastChar.match(/[1-8]/)) {
 					string = string.substring(0, string.length - 1);
@@ -174,10 +174,10 @@ Chess.prototype._boardString = function() {
 					string += '1';
 				}
 			} else {
-				string += this.board[i][j];
+				string += this.board[r][f];
 			}
 		}
-		if (i < this.board.length - 1) {
+		if (r < this.board.length - 1) {
 			string += '/';
 		}
 	}
@@ -217,11 +217,10 @@ Chess.prototype._anToFen = function(algebraic) {
 };
 
 Chess.prototype._removeCastleRight = function(castleChar) {
-	if (this.activeColor === 'w') {
-		castleChar = castleChar.toUpperCase();
-	} else {
-		castleChar = castleChar.toLowerCase();
-	}
+	castleChar = (this.activeColor === 'w') ? 
+		castleChar.toUpperCase() :
+		castleChar.toLowerCase()
+	;
 
 	this.castle = this.castle.replace(castleChar, '');
 
@@ -231,15 +230,13 @@ Chess.prototype._removeCastleRight = function(castleChar) {
 };
 
 Chess.prototype._checkCastleRight = function(castleChar) {
-	if (this.activeColor === 'w') {
-		castleChar = castleChar.toUpperCase();
-	} else {
-		castleChar = castleChar.toLowerCase();
-	}
+	castleChar = (this.activeColor === 'w') ? 
+		castleChar.toUpperCase() :
+		castleChar.toLowerCase()
+	;
 
-	return this.castle.split('').some(function(c) {
-		return c === castleChar;
-	});
+	var re = new RegExp(castleChar);
+	return this.castle.match(re) && true;
 };
 
 Chess.prototype._findKing = function(color) {
@@ -464,17 +461,17 @@ Chess.prototype._getValidMoves = function(selPiece, strPos) {
 	var validMoves = [];
 	var endPiece;
 
-	if (selPiece === 'n' || selPiece === 'N') {
+	if (selPiece.match(/n/i)) {
 		possibleMoves = this._getKnightMoves(strPos);
-	} else if (selPiece === 'r' || selPiece === 'R') {
+	} else if (selPiece.match(/r/i)) {
 		possibleMoves = this._getRookMoves(strPos);
-	} else if (selPiece === 'b' || selPiece === 'B') {
+	} else if (selPiece.match(/b/i)) {
 		possibleMoves = this._getBishopMoves(strPos);
-	} else if (selPiece === 'q' || selPiece === 'Q') {
+	} else if (selPiece.match(/q/i)) {
 		possibleMoves = this._getQueenMoves(strPos);
-	} else if (selPiece === 'p' || selPiece === 'P') {
+	} else if (selPiece.match(/p/i)) {
 		possibleMoves = this._getPawnMoves(strPos);
-	} else if (selPiece === 'k' || selPiece === 'K') {
+	} else if (selPiece.match(/k/i)) {
 		possibleMoves = this._getKingMoves(strPos);
 	}
 
