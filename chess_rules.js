@@ -36,6 +36,7 @@ Chess.prototype.play = function(startAlg, finishAlg, promotion) {
 	var backrank = (this.activeColor === 'w') ? 7 : 0;
 	var lastRank = (this.activeColor === 'w') ? 0 : 7;
 	var dir = (this.activeColor === 'w') ? -1 : 1;
+	var halfMoveReset = false;
 
 	if (!this.canPlay(startAlg)) {
 		return [];
@@ -47,6 +48,10 @@ Chess.prototype.play = function(startAlg, finishAlg, promotion) {
 		return square.r === endPos.r && square.f === endPos.f;
 	});
 	if (endIsValid) {
+		if (this._getPiece(endPos) !== ' ' || selPiece.match(/p/i)) {
+			halfMoveReset = true;
+		}
+
 		this.board[endPos.r][endPos.f] = this.board[strPos.r][strPos.f];
 		this.board[strPos.r][strPos.f] = ' ';
 		updatedSquares.push(startAlg, finishAlg);
@@ -103,7 +108,11 @@ Chess.prototype.play = function(startAlg, finishAlg, promotion) {
 		return [];
 	}
 
-	this.halfMoveClock += 1;
+	if (halfMoveReset) {
+		this.halfMoveClock = 0;
+	} else {
+		this.halfMoveClock += 1;
+	}
 	if (this.activeColor === 'b') {
 		this.activeColor = 'w';
 		this.fullMoveNumber += 1;
